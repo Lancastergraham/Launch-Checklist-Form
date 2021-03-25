@@ -4,6 +4,7 @@ function init() {
 
   const submission = (event) => {
     event.preventDefault();
+    let missionTarget = document.getElementById("missionTarget");
     let storedInputs = gatherInputs();
 
     if (typeof storedInputs !== 'undefined') {
@@ -11,8 +12,13 @@ function init() {
         launchCheckSuccessful(storedInputs);
         whereAreWeGoing()
       } else {
+        missionTarget.innerHTML = ""
         thisLaunchHasGoneWrong(storedInputs);
+        console.log(storedInputs[2])
       }
+    }
+    else {
+        missionTarget.innerHTML = "";
     }
   }
 
@@ -22,8 +28,8 @@ function init() {
 
     let pilotName = document.getElementById('pilotName').value;
     let copilotName = document.querySelector("input[name=copilotName]").value;
-    let fuelLevel = parseFloat(document.querySelector("input[name=fuelLevel]").value);
-    let cargoMass = parseFloat(document.querySelector("input[name=cargoMass]").value);
+    let fuelLevel = Number(document.querySelector("input[name=fuelLevel]").value);
+    let cargoMass = Number(document.querySelector("input[name=cargoMass]").value);
 
     infoArray.push(pilotName, copilotName, fuelLevel, cargoMass);
 
@@ -45,7 +51,10 @@ function init() {
     let fuelNumber = currentArray[2];
     let massNumber = currentArray[3];
 
-    if (pilotName === "" || copilotName === "" || isNaN(fuelNumber) === true || isNaN(massNumber) === true) {
+    if (pilotName === "" || copilotName === "" || fuelNumber === "" || massNumber === "") {
+      result = true;
+    }
+    if (!isNaN(pilotName)|| !isNaN(copilotName)|| isNaN(fuelNumber)|| isNaN(massNumber)) {
       result = true;
     }
 
@@ -119,9 +128,7 @@ function init() {
       let fuelStatus = document.getElementById('fuelStatus');
       let cargoStatus = document.getElementById('cargoStatus');
 
-
-
-      faultyItems.style.visibility = "visible"
+      faultyItems.style.visibility = "visible";
 
       launchStatus.style.color = "green";
       launchStatus.innerHTML = "Shuttle is ready for launch!";
@@ -140,17 +147,17 @@ function init() {
       let missionTarget = document.getElementById("missionTarget");
 
       let planetPicker = fetch(url).then(function(response) {
-        response.json().then(function(planetPicker){
+        response.json().then(function(newEvent){
           missionTarget.innerHTML = `
           <h2>Mission Destination</h2>
           <ol>
-             <li>Name: ${planetPicker[randomNumber].name}</li>
-             <li>Diameter: ${planetPicker[randomNumber].diameter}</li>
-             <li>Star: ${planetPicker[randomNumber].star}</li>
-             <li>Distance from Earth: ${planetPicker[randomNumber].distance}</li>
-             <li>Number of Moons: ${planetPicker[randomNumber].moons}</li>
+             <li>Name: ${newEvent[randomNumber].name}</li>
+             <li>Diameter: ${newEvent[randomNumber].diameter}</li>
+             <li>Star: ${newEvent[randomNumber].star}</li>
+             <li>Distance from Earth: ${newEvent[randomNumber].distance}</li>
+             <li>Number of Moons: ${newEvent[randomNumber].moons}</li>
           </ol>
-          <img src="${planetPicker[randomNumber].image}">
+          <img src="${newEvent[randomNumber].image}">
           `
         });
 
